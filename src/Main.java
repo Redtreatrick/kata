@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
-    public static void main(String[] args)  throws IOException {
+    public static void main(String[] args) throws MyException, IOException {
 
         // считать строку
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -25,10 +25,10 @@ public class Main {
         System.out.println(answer);
     }
 
-    private static String getAnswer(String v1, String operand,String v2, int n) {
+    private static String getAnswer(String v1, String operand,String v2, int n) throws MyException {
 
         if(n != 3) {
-            return "EXCEPTION: wrong input";
+            throw new MyException("EXCEPTION: wrong input");
         }
 
         int result;
@@ -36,7 +36,7 @@ public class Main {
         // check if val_1, val_2 are roman
         if(Roman.isPresent(v1)) {
             if(!Roman.isPresent(v2)) {
-                return "EXCEPTION: second value is not correct";
+                throw new MyException("Second value is incorrect");
             }
 
             switch (operand) {
@@ -44,19 +44,17 @@ public class Main {
                 case "*" -> result = (Roman.getValue(Roman.valueOf(v1)) * Roman.getValue(Roman.valueOf(v2)));
                 case "-" -> {
                     if (Roman.getValue(Roman.valueOf(v1)) <= Roman.getValue(Roman.valueOf(v2))) {
-                        return "EXCEPTION: Roman only have numbers higher than zero";
+                        throw new MyException("Roman only have numbers higher than zero") ;
                     }
                     result = (Roman.getValue(Roman.valueOf(v1)) - Roman.getValue(Roman.valueOf(v2)));
                 }
                 case "/" -> {
                     if (Roman.getValue(Roman.valueOf(v1)) < Roman.getValue(Roman.valueOf(v2))) {
-                        return "EXCEPTION: Roman only have numbers higher than zero";
+                        throw new MyException("Roman only have numbers higher than zero") ;
                     }
                     result = (Roman.getValue(Roman.valueOf(v1)) / Roman.getValue(Roman.valueOf(v2)));
                 }
-                default -> {
-                    return "EXCEPTION: wrong operand";
-                }
+                default -> throw new MyException("Wrong operand") ;
             }
             return itor(result);
         }
@@ -65,9 +63,9 @@ public class Main {
         int a = stoi(v1);
         int b = stoi(v2);
 
-        if(a != 42) {
+        if(a != 42) { // 42 is the error of converting String to int
             if(b == 42) {
-                return "EXCEPTION: second value is not correct";
+                throw new MyException("Second value is incorrect");
             }
 
             switch (operand) {
@@ -75,13 +73,12 @@ public class Main {
                 case "*" -> result = a * b;
                 case "-" -> result = a - b;
                 case "/" -> result = a / b;
-                default -> {
-                    return "EXCEPTION: wrong operand";
-                }
+                default -> throw new MyException("Wrong operand");
+
             }
             return String.valueOf(result);
         }
-        return "EXCEPTION: unexpected error";
+        return "Unexpected error";
     }
 
     private static int stoi(String str) {
